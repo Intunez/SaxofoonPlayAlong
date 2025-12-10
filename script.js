@@ -6,8 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const scoreDisplay = document.getElementById('score-display');
 
     // ** LAGE NOTEN REEKS **
-    // Dit is de reeks van noten en hun duur in maten. 
-    // Bijvoorbeeld: duration: 4 betekent 4 maten lang blazen op de noot.
     const initialSequence = [
         { note: 'Lage D', duration: 2 },  
         { note: 'Lage C', duration: 1 },  
@@ -16,7 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
         { note: 'Lage C', duration: 2 },
         { note: 'Lage Bes', duration: 2 },
     ];
-    let noteSequence = []; // Wordt gevuld bij start
+    let noteSequence = []; 
 
     let isPlaying = false;
     let audioContext;
@@ -27,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- AUDIO LOGICA (Simpele metronoom) ---
     function setupAudioContext() {
         if (!audioContext) {
-            // Initialiseer AudioContext bij de eerste klik
             audioContext = new (window.AudioContext || window.webkitAudioContext)();
         }
     }
@@ -38,12 +35,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const oscillator = audioContext.createOscillator();
         const gainNode = audioContext.createGain();
 
-        // Hogere toon voor de eerste tel (hoofdbeat), lagere voor de rest
         const beatCount = currentBarIndex % notesPerBar;
         oscillator.frequency.setValueAtTime(beatCount === 0 ? 880 : 440, time); 
         
         gainNode.gain.setValueAtTime(0.5, time);
-        gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.05); // Snelle fade-out
+        gainNode.gain.exponentialRampToValueAtTime(0.001, time + 0.05);
 
         oscillator.connect(gainNode);
         gainNode.connect(audioContext.destination);
@@ -53,28 +49,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function scheduler() {
         const tempo = parseInt(tempoInput.value);
-        const beatDuration = 60 / tempo; // Duur van een kwartnoot in seconden
+        const beatDuration = 60 / tempo;
 
-        // We plannen de volgende beat
         if (audioContext.currentTime + 0.1 < beatTimer) {
-             return; // De tijd is nog niet rijp voor de volgende noot
+             return;
         }
 
-        // Speel de beat en plan de volgende
         playBeat(beatTimer);
         currentBarIndex++;
         beatTimer += beatDuration;
 
-        // Visuele balken plannen: De balk komt elke 4 tellen (één maat)
         if (currentBarIndex % notesPerBar === 0 && noteSequence.length > 0) {
             scheduleVisualBar(audioContext.currentTime);
         } else if (currentBarIndex % notesPerBar === 0 && noteSequence.length === 0) {
-             // Als de sequence leeg is, stoppen we een maat na de laatste noot
              stopGame();
              return;
         }
 
-        // Blijf herplannen
         if (isPlaying) {
             setTimeout(scheduler, 50); 
         }
@@ -84,9 +75,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function scheduleVisualBar(startTime) {
         
-        const barData = noteSequence.shift(); // Haal de volgende noot uit de array
+        const barData = noteSequence.shift();
         const tempo = parseInt(tempoInput.value);
-        // Totale seconden dat de noot moet duren: (duur kwartnoot * 4 tellen) * aantal maten
         const barDuration = (60 / tempo) * notesPerBar * barData.duration; 
         
         const barElement = document.createElement('div');
@@ -95,24 +85,19 @@ document.addEventListener('DOMContentLoaded', () => {
         barElement.innerHTML = `<span class="note-label">${barData.note}</span>`;
         gameArea.appendChild(barElement);
         
-        // De travelDuration is de tijd die nodig is om van 100% naar de speellijn (50%) te bewegen
-        const travelDuration = 2; // (2 seconden)
+        const travelDuration = 2;
         const totalDurationOnScreen = travelDuration + barDuration;
 
-        // Start animatie: laat de balk naar het midden bewegen
         requestAnimationFrame(() => {
             barElement.style.transition = `transform ${travelDuration}s linear, width ${barDuration}s linear`;
-            barElement.style.transform = `translateX(-50%)`; // Eindpunt: midden van het scherm
-            barElement.style.width = `50%`; // Breedte op het moment dat de lijn bereikt wordt
+            barElement.style.transform = `translateX(-50%)`;
+            barElement.style.width = `50%`;
         });
 
-        // Tijd om de noot aan te houden:
-        // De leerling moet de noot op dit moment loslaten
         setTimeout(() => {
             barElement.style.width = '0%'; 
         }, travelDuration * 1000);
 
-        // Verwijder de balk nadat deze volledig is verdwenen
         setTimeout(() => {
             if(gameArea.contains(barElement)) {
                 gameArea.removeChild(barElement);
@@ -128,15 +113,12 @@ document.addEventListener('DOMContentLoaded', () => {
         setupAudioContext();
         isPlaying = true;
         
-        // Reset en start de sequence
         gameArea.innerHTML = '';
         gameArea.appendChild(targetLine);
         currentBarIndex = 0;
         
-        // Reset de notenreeks voor een nieuw spel (gebruik een kopie)
         noteSequence = [...initialSequence]; 
 
-        // Start de timer net iets in de toekomst
         beatTimer = audioContext.currentTime + 0.1; 
         
         startButton.textContent = "Stop Duik";
@@ -157,7 +139,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Zorg ervoor dat het tempo een nummer is
     tempoInput.addEventListener('change', () => {
         if (parseInt(tempoInput.value) < 40) tempoInput.value = 40;
         if (parseInt(tempoInput.value) > 120) tempoInput.value = 120;
