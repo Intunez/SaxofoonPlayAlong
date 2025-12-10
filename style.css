@@ -3,13 +3,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: #f0f8ff; /* Lichtblauwe achtergrond */
+    background-color: #f0f8ff; 
     color: #333;
     padding: 20px;
 }
 
 h1 {
-    color: #004d40; /* Donkergroene titel */
+    color: #004d40;
 }
 
 #controls {
@@ -26,7 +26,7 @@ h1 {
 
 #start-button {
     padding: 10px 15px;
-    background-color: #38a169; /* Groene knop */
+    background-color: #38a169;
     color: white;
     border: none;
     border-radius: 5px;
@@ -43,30 +43,30 @@ h1 {
     width: 90%;
     max-width: 600px;
     height: 150px;
-    background-color: #fff; /* Witte achtergrond voor speelveld */
+    background-color: #fff;
     border: 3px solid #004d40;
     margin-top: 20px;
     position: relative;
-    overflow: hidden; /* Zorgt ervoor dat de balken netjes in het veld blijven */
+    overflow: hidden;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 #target-line {
     position: absolute;
-    left: 50%; /* De centrale speellijn */
+    left: 50%; 
     top: 0;
     bottom: 0;
-    width: 4px; /* Iets dikker gemaakt */
+    width: 4px;
     background-color: red;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #f0f8ff; /* Tekstkleur (wordt nauwelijks gezien, maar voor de zekerheid) */
+    color: #f0f8ff;
     font-weight: bold;
     z-index: 10;
     transform: translateX(-50%);
     text-orientation: upright;
-    writing-mode: vertical-rl; /* Tekst verticaal zetten */
+    writing-mode: vertical-rl;
     padding-left: 5px;
     opacity: 0.8;
 }
@@ -74,19 +74,19 @@ h1 {
 .note-bar {
     position: absolute;
     height: 100%;
-    background-color: #38a169; /* Groene kleur voor de balk */
+    background-color: #38a169;
     opacity: 0.8;
-    left: 100%; /* Begint rechts van het scherm */
+    left: 100%;
     transition: transform 0.1s linear; 
-    border-right: 2px solid #004d40; /* Rand voor betere zichtbaarheid */
+    border-right: 2px solid #004d40;
     box-sizing: border-box;
 }
 
 .note-label {
     position: absolute;
-    bottom: 5px; /* Onderin de balk */
+    bottom: 5px;
     left: 5px;
-    color: white; /* Witte tekst op de balk */
+    color: white;
     font-weight: bold;
     font-size: 1.2em;
     padding: 2px 5px;
